@@ -1,18 +1,18 @@
-# 📘 Repositorio de Prácticas Profesionales
+# Repositorio de Prácticas Profesionales
 
 Este repositorio contiene las tareas, ejercicios y trabajos prácticos realizados durante mi periodo de prácticas profesionales en la empresa.
 
 ------------------------------------------------------------
 
-## 👨‍💻 Información General
+## Información General
 
-- Nombre: [César Rodríguez]
-- Empresa: [IDS]
-- Periodo: [02-2026] - [05-2026]
+- Nombre: César Rodríguez
+- Empresa: IDS
+- Periodo: 02-2026 - 05-2026
 
 ------------------------------------------------------------
 
-## 🎯 Objetivo
+## Objetivo
 
 Documentar y organizar todo el trabajo realizado durante las prácticas, incluyendo:
 
@@ -24,19 +24,7 @@ Documentar y organizar todo el trabajo realizado durante las prácticas, incluye
 
 ------------------------------------------------------------
 
-## 📂 Estructura del Repositorio
-
-practicas-profesionales
-│
-├── tareas/
-├── ejercicios/
-├── proyectos/
-├── investigaciones/
-└── README.md
-
-------------------------------------------------------------
-
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 Dependiendo de las actividades realizadas:
 
@@ -53,7 +41,7 @@ Dependiendo de las actividades realizadas:
 
 ------------------------------------------------------------
 
-## 📌 Metodología de Trabajo
+## Metodología de Trabajo
 
 - Control de versiones con Git
 - Organización por carpetas según tipo de actividad
@@ -62,7 +50,7 @@ Dependiendo de las actividades realizadas:
 
 ------------------------------------------------------------
 
-## 🚀 Aprendizajes Clave
+## Aprendizajes Clave
 
 Durante este periodo he reforzado conocimientos en:
 
@@ -75,7 +63,7 @@ Durante este periodo he reforzado conocimientos en:
 
 ------------------------------------------------------------
 
-## 🔒 Nota
+## Nota
 
 Este repositorio tiene fines académicos y profesionales.
 Parte del contenido puede estar adaptado para no exponer información confidencial de la empresa.
