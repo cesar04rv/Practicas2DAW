@@ -23,7 +23,7 @@ Estructura de archivos
 /
 ├── css/
 │   └── estilos.css
-├── img/               # Carpeta donde se guardan las imágenes de usuarios
+├── img/
 ├── borrar.php
 ├── conexion.php
 ├── crear.php
@@ -81,10 +81,11 @@ Funcionamiento
   - La tabla se actualiza automáticamente tras crear, editar o borrar un usuario sin recargar la página.
 
 ------------------------------------------------------------
+### Ejemplo visual
+![Demo del CRUD](assets/PDO.gif)
 Validaciones
 
-Las validaciones se realizan sin usar expresiones regulares, en JavaScript:
-
+- Validaciones, tanto del lado del cliente, como del del servidor.
 - Nombre y apellidos: solo letras y espacios.
 - Email: debe contener '@' y '.' y no contener espacios.
 - Teléfono: exactamente 9 dígitos.
@@ -111,4 +112,4 @@ Observaciones
 ------------------------------------------------------------
 Autor
 
-César Rodríguez (https://github.com/cesar04rv)  
+César Rodríguez
