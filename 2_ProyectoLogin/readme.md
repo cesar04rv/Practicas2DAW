@@ -70,7 +70,7 @@ Funcionalidades Clave
 - Registro de usuario con validaciones de:  
   - Nombre de usuario (solo letras).  
   - Email con formato válido.  
-  - Contraseña con mínimo 5 caracteres (8 en registro).  
+  - Contraseña con mínimo 8 caracteres.  
   - Verificación de usuarios y emails únicos en la base de datos.
 
 - Inicio de sesión con:  
