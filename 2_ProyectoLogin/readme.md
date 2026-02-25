@@ -15,16 +15,16 @@ Estructura del Proyecto
 /styles
     └── estilos.css
 
-bienvenida.php
-code-login.php
-code-register.php
-conexion.php
-datos.php
-index.php
-info.php
-logout.php
-register.php
-validaciones.php
+- bienvenida.php
+- code-login.php
+- code-register.php
+- conexion.php
+- datos.php
+- index.php
+- info.php
+- logout.php
+- register.php
+- validaciones.php
 
 ---
 
