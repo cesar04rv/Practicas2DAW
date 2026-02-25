@@ -128,23 +128,4 @@ Seguridad
 - Hashing seguro de contraseñas con password_hash.  
 - Preparación de consultas SQL con sentencias preparadas (MySQLi) para evitar inyección SQL.
 
----
 
-Mejoras Futuras
-
-- Añadir validación y sanitización más robusta.  
-- Implementar recuperación de contraseña.  
-- Añadir confirmación de registro por email.  
-- Mejorar la interfaz gráfica y experiencia de usuario.
-
----
-
-Autor
-
-Proyecto desarrollado como ejemplo de sistema básico de login en PHP con HTML5 y CSS3.
-
----
-
-Capturas
-
-Las imágenes img1.jpg y logo ghub.jfif se usan en la interfaz para mejorar la experiencia visual.
