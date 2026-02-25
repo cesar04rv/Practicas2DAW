@@ -1,4 +1,7 @@
 <!doctype html>
+<?php
+include("code-login.php");
+?>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,27 +10,29 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Document</title>
-    <link rel="stylesheet" href="/styles/estilos.css">
+    <link rel="stylesheet" href="./styles/estilos.css">
   </head>
   <body>
     <div class="container-all">
       <div class="ctn-form">
-        <img src="/img/logo ghub.jfif" alt="" class="logo" />
+        <img src="./img/logo ghub.jfif" alt="" class="logo" />
         <div class="campos">
         <h1 class="title">Iniciar Sesión</h1>
 
-        <form action="">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
           <label for="email">Email</label>
-          <input type="text" id="email" name="email" required />
+          <input type="text" id="email" name="email"  />
+          <span class="msg-error"><?php echo $email_err; ?></span>
           <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" required />
+          <input type="password" id="password" name="password"  />
+          <span class="msg-error"><?php echo $password_err; ?></span>
 
           <input type="submit" value="Iniciar" />
           </div>
         </form>
         <span class="text-footer"
           >¿No tienes cuenta?
-          <a href="#">Regístrate aquí</a>
+          <a href="register.php">Regístrate aquí</a>
         </span>
 
       

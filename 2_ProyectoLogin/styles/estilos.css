@@ -143,6 +143,54 @@ input[type="submit"]:hover {
   text-align: justify;
 }
 
+/*Texto de error*/
+.msg-error {
+  color: red;
+  display: block;
+  margin-top: 10px;
+}
+
+  /*Bienvenida*/
+  .ctn-welcome {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  padding: 40px;
+  margin: auto;
+  margin-top: 100px;
+  background: #fff;
+  border-radius: 20px;
+  }
+
+  .logo-welcome{
+    width: 200px;
+    margin: 20px;
+  }
+  .title-welcome{
+    font-size: 40px;
+    margin-top: 20px;
+    font-weight: 400;
+  }
+  .title-welcome b{
+    color:#bf4222
+  }
+  .close-sesion{
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    display: block;
+    padding: 20px;
+    margin-top:40px;
+    background: linear-gradient(90deg, #bf4222, #e30f87);
+    color:#fff;
+    font-size: 20px;
+    font-weight: 300;
+    border-radius:12px;
+  }
+  .close-sesion:hover{
+    background: linear-gradient(90deg, #e30f87, #bf4222);
+  }
+
 /*Responsive*/
 @media screen and (max-width: 800px) {
   .ctn-text {
@@ -156,3 +204,11 @@ input[type="submit"]:hover {
         border-bottom-right-radius: 12px;
     }
   }
+
+@media screen and (max-width: 500px) {
+  .title-welcome{
+    font-weight: 400;
+    font-size: 30px;
+    margin-top: 20px;
+  }
+}
