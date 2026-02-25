@@ -6,7 +6,7 @@ include("validaciones.php");
 $username = $email = $password = "";
 $username_err = $email_err = $password_err = "";
 
-//comprobar que los campos pasados por el formulario no esten vacios
+//comprobar que los campos pasados por el formulario no esten vacíos y que sean validos
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 

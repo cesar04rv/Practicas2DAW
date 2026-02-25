@@ -37,7 +37,7 @@ include("code-register.php");
             </div>
             </form>
             <span class="text-footer">Ya tienes una cuenta?
-                <a href="#">Iniciar sesión </a>
+                <a href="index.php">Iniciar sesión </a>
             </span>
 
 

@@ -28,13 +28,8 @@ function validar_email($email){
     }
 }
 
-function validar_cp($cp){
-    if (preg_match("/^[0-9]{5}$/", $cp)) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
+// validar la longitud de la contraseña
 function longitud_password($password){
     if (strlen($password) >= 5) {
         return true;
