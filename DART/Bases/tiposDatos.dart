@@ -184,3 +184,177 @@ class Cuadrado {
 
   String toString() => 'Lado: $_lado';
 }
+
+
+//Clases abstractas
+
+//No pueden ser instanciadas de una clase abstracta
+//Es un modelo a seguir
+
+void main(){
+  
+  //final perro = new Animal();
+}
+
+
+abstract class Animal{
+  int patas = 0;
+  void emitirSonido();
+ 
+}
+
+
+class Perro implements Animal{
+  
+  
+  int patas=0;
+  int colas=0;
+  
+  void emitirSonido(){
+    print("Guau");
+  }
+
+}
+
+class Gato implements Animal{
+  int patas = 0;
+  void emitirSonido(){
+    print("miau");
+  }
+}
+
+
+
+// Extends
+void main() {
+
+
+  final Superman = new Heroe();
+   Superman.nombre="Clark Kent";
+
+  final Batman = new Villano();
+  Batman.nombre="Paco";
+}
+
+abstract class Personaje {
+  
+  String nombre ="";
+  String poder="";
+ 
+}
+
+class Heroe extends Personaje {
+  
+  int valentia = 0;
+}
+
+class Villano extends Personaje {
+
+  int maldad = 0;
+}
+
+
+//Mixes
+
+void main(){
+  final pato = new Pato();
+  pato.volar();
+  
+  final pezVolador = new PezVolador();
+  pezVolador.volar();
+}
+abstract class Animal{
+  
+}
+
+abstract class Mamifero extends Animal{
+  
+}
+
+
+abstract class Ave extends Animal{
+  
+}
+
+abstract class Pez extends Animal{
+  
+}
+
+
+mixin Volador{
+  void volar()=> print("Estoy volando");
+}
+mixin Caminante{
+  void cmainar()=> print("Estoy caminando");
+}
+mixin Nadador{
+  void nadar()=> print("Estoy nadando");
+}
+
+class Delfin extends Mamifero with Nadador{
+  
+}
+
+class Murcielago extends Mamifero with Caminante, Volador{
+  
+}
+
+class Gato extends Mamifero with Caminante{
+  
+}
+
+class Paloma extends Ave with Caminante, Volador{
+  
+}
+
+class Pato extends Ave with Caminante, Volador, Nadador{
+  
+}
+
+class Tiburon extends Pez with Nadador{
+  
+}
+
+class PezVolador extends Pez with Nadador, Volador{}
+
+
+//Futures
+
+void main(){
+  print ("A punto de pedir datos");
+  httpGet("https://api.nasa.com/aliens").then( 
+   (data){
+   print(data); 
+  } );
+  
+  print("Ultima linea");
+  
+}
+
+Future<String> httpGet(String url){
+  return Future.delayed(new Duration(seconds: 4), (){
+    return "Hola mundo";
+  });
+}
+
+//Async await
+
+
+void main() async{
+  print ("A punto de pedir datos");
+  String data = await  httpGet("https://api.nasa.com/aliens").then( 
+   (data){
+   print(data); 
+  } );
+  
+  print("Ultima linea");
+  
+}
+
+Future<String> httpGet(String url){
+  return Future.delayed(new Duration(seconds: 4), (){
+    return "Hola mundo";
+  });
+}
+
+ 
