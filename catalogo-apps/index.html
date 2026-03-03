@@ -171,16 +171,6 @@
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-group">
-          <label>Responsable principal *</label>
-          <select class="form-control" id="pf-owner" required></select>
-        </div>
-        <div class="form-group">
-          <label>Responsable secundario</label>
-          <select class="form-control" id="pf-sec-owner"></select>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-group">
           <label>Estado</label>
           <select class="form-control" id="pf-status">
             <option value="dev">Desarrollo</option>
@@ -192,6 +182,10 @@
           <label>Ubicación</label>
           <input class="form-control" id="pf-location" placeholder="Ordenador de Lucas, servidor...">
         </div>
+      </div>
+      <div class="form-group">
+        <label>Usuarios del proyecto</label>
+        <div id="pf-user-picker"></div>
       </div>
       <div class="form-group">
         <label>Tecnologías</label>
@@ -210,7 +204,7 @@
         <input class="form-control" id="pf-creds" placeholder="Vault › proyecto › credenciales">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-ghost" id="project-modal-close2" onclick="document.getElementById('project-modal').classList.remove('open')">Cancelar</button>
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('project-modal').classList.remove('open')">Cancelar</button>
         <button type="submit" class="btn btn-primary">Guardar</button>
       </div>
     </form>
