@@ -32,7 +32,11 @@ function requireAuth(): array {
 
 /** Requiere rol admin; aborta con 403 si no lo tiene. */
 function requireAdmin(): array {
-    return requireAuth();
+    $user = requireAuth();
+    if ($user['role'] !== 'admin') {
+        respondForbidden('Acción reservada para administradores');
+    }
+    return $user;
 }
 
 /** Inicia sesión almacenando los datos del usuario. */

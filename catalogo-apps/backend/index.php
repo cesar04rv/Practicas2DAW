@@ -28,8 +28,9 @@ require_once __DIR__ . '/controllers/TechnologyController.php';
 $method = $_SERVER['REQUEST_METHOD'];
 // Obtener la ruta después de /backend/index.php
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri    = preg_replace('#^.*?/backend#', '', $uri);
+$uri = preg_replace('#^.*?/backend#', '', $uri);
 $uri    = rtrim($uri, '/') ?: '/';
+
 // Segmentos: /resource/id/sub
 $parts = explode('/', ltrim($uri, '/'));
 $resource = $parts[0] ?? '';

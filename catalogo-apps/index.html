@@ -24,7 +24,6 @@
       <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('technologies')">Tecnologías</button>
       <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('users')">Usuarios</button>
       <button class="btn btn-primary btn-sm admin-only" onclick="openProjectModal()">+ Nuevo Proyecto</button>
-      <button class="btn btn-ghost btn-sm" onclick="toggleTheme()" id="theme-toggle">☀️</button>
       <button class="btn btn-ghost btn-sm" onclick="doLogout()">Salir</button>
     </div>
   </nav>
@@ -163,8 +162,12 @@
         <input class="form-control" id="pf-name" required placeholder="Nombre del proyecto">
       </div>
       <div class="form-group">
+        <label>Subtítulo</label>
+        <input class="form-control" id="pf-subtitle" placeholder="Una frase corta que lo describa">
+      </div>
+      <div class="form-group">
         <label>Descripción</label>
-        <textarea class="form-control" id="pf-description" rows="3" placeholder="Descripción breve…"></textarea>
+        <textarea class="form-control" id="pf-description" rows="3" placeholder="¿Qué hace este proyecto?"></textarea>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="form-group">
@@ -176,35 +179,35 @@
           <select class="form-control" id="pf-sec-owner"></select>
         </div>
       </div>
-      <div class="form-group">
-        <label>Estado</label>
-        <select class="form-control" id="pf-status">
-          <option value="dev">Desarrollo</option>
-          <option value="production">Producción</option>
-          <option value="stopped">Parado</option>
-        </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Estado</label>
+          <select class="form-control" id="pf-status">
+            <option value="dev">Desarrollo</option>
+            <option value="production">Producción</option>
+            <option value="stopped">Parado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ubicación</label>
+          <input class="form-control" id="pf-location" placeholder="Ordenador de Lucas, servidor...">
+        </div>
       </div>
       <div class="form-group">
         <label>Tecnologías</label>
         <div id="pf-tech-picker" class="tech-picker"></div>
       </div>
       <div class="form-group">
-        <label>Repositorio Git</label>
-        <input class="form-control" id="pf-git" placeholder="git@gitlab.empresa.com:…">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-group">
-          <label>Servidor</label>
-          <input class="form-control" id="pf-server" placeholder="srv-prod-01">
-        </div>
-        <div class="form-group">
-          <label>URL</label>
-          <input class="form-control" id="pf-url" type="url" placeholder="https://…">
-        </div>
+        <label>Entornos de desarrollo</label>
+        <input class="form-control" id="pf-devenv" placeholder="VS Code, PyCharm, Laravel...">
       </div>
       <div class="form-group">
-        <label>Ubicación de credenciales</label>
-        <input class="form-control" id="pf-creds" placeholder="Vault > secret/proyecto > credenciales">
+        <label>URL del sitio</label>
+        <input class="form-control" id="pf-url" type="url" placeholder="https://…">
+      </div>
+      <div class="form-group">
+        <label>Credenciales</label>
+        <input class="form-control" id="pf-creds" placeholder="Vault › proyecto › credenciales">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" id="project-modal-close2" onclick="document.getElementById('project-modal').classList.remove('open')">Cancelar</button>

@@ -26,7 +26,7 @@ class UserController {
 
     /** POST /users — solo admin */
     public static function store(): never {
-        requireAuth();
+        requireAdmin();
         $body = getJsonBody();
 
         $name  = sanitize($body['name']  ?? '');

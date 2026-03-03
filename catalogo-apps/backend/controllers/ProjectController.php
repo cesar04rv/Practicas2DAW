@@ -5,15 +5,10 @@
 
 class ProjectController {
 
-    /**
-     * GET /projects
-     * Query params: status, owner_id, technology_id, search, page
-     */
     public static function index(): never {
         requireAuth();
         $db = Database::getInstance();
 
-        // ---- Construcción dinámica del WHERE con prepared statements ----
         $conditions = [];
         $params     = [];
 
@@ -23,16 +18,14 @@ class ProjectController {
             $params[]     = $status;
         }
 
-        $ownerId = isset($_GET['owner_id']) && is_numeric($_GET['owner_id'])
-                   ? (int)$_GET['owner_id'] : null;
+        $ownerId = isset($_GET['owner_id']) && is_numeric($_GET['owner_id']) ? (int)$_GET['owner_id'] : null;
         if ($ownerId) {
             $conditions[] = '(p.owner_id = ? OR p.secondary_owner_id = ?)';
             $params[]     = $ownerId;
             $params[]     = $ownerId;
         }
 
-        $techId = isset($_GET['technology_id']) && is_numeric($_GET['technology_id'])
-                  ? (int)$_GET['technology_id'] : null;
+        $techId = isset($_GET['technology_id']) && is_numeric($_GET['technology_id']) ? (int)$_GET['technology_id'] : null;
         if ($techId) {
             $conditions[] = 'EXISTS (SELECT 1 FROM project_technologies pt WHERE pt.project_id = p.id AND pt.technology_id = ?)';
             $params[]     = $techId;
@@ -40,33 +33,26 @@ class ProjectController {
 
         $search = sanitize($_GET['search'] ?? '');
         if ($search !== '') {
-            // FULLTEXT para rendimiento con 500+ proyectos
             $conditions[] = 'MATCH(p.name, p.description) AGAINST (? IN BOOLEAN MODE)';
             $params[]     = $search . '*';
         }
 
         $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
-        // ---- Paginación ----
-        $page    = max(1, (int)($_GET['page'] ?? 1));
-        $limit   = PAGE_SIZE;
-        $offset  = ($page - 1) * $limit;
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = PAGE_SIZE;
+        $offset = ($page - 1) * $limit;
 
-        // Contar total para meta de paginación
-        $countSql  = "SELECT COUNT(*) FROM projects p $where";
-        $countStmt = $db->prepare($countSql);
+        $countStmt = $db->prepare("SELECT COUNT(*) FROM projects p $where");
         $countStmt->execute($params);
         $total = (int)$countStmt->fetchColumn();
 
-        // Query principal con JOIN para traer nombres de responsables
         $sql = "
-            SELECT
-                p.id, p.name, p.description, p.status,
-                p.git_repo, p.server, p.url,
-                p.credentials_location,
+            SELECT p.id, p.name, p.subtitle, p.description, p.status,
+                p.location, p.dev_environment, p.url, p.credentials_location,
                 p.created_at, p.updated_at,
-                u1.id   AS owner_id,    u1.name AS owner_name,
-                u2.id   AS sec_owner_id, u2.name AS sec_owner_name
+                u1.id AS owner_id, u1.name AS owner_name,
+                u2.id AS sec_owner_id, u2.name AS sec_owner_name
             FROM projects p
             LEFT JOIN users u1 ON u1.id = p.owner_id
             LEFT JOIN users u2 ON u2.id = p.secondary_owner_id
@@ -78,11 +64,10 @@ class ProjectController {
         $stmt->execute($params);
         $projects = $stmt->fetchAll();
 
-        // Agregar tecnologías a cada proyecto (N+1 evitado con IN)
         if ($projects) {
-            $ids         = array_column($projects, 'id');
+            $ids          = array_column($projects, 'id');
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $techStmt    = $db->prepare("
+            $techStmt     = $db->prepare("
                 SELECT pt.project_id, t.id, t.name, t.color
                 FROM project_technologies pt
                 JOIN technologies t ON t.id = pt.technology_id
@@ -91,14 +76,9 @@ class ProjectController {
             $techStmt->execute($ids);
             $techRows = $techStmt->fetchAll();
 
-            // Agrupar tecnologías por proyecto
             $techMap = [];
             foreach ($techRows as $row) {
-                $techMap[$row['project_id']][] = [
-                    'id'    => $row['id'],
-                    'name'  => $row['name'],
-                    'color' => $row['color'],
-                ];
+                $techMap[$row['project_id']][] = ['id' => $row['id'], 'name' => $row['name'], 'color' => $row['color']];
             }
             foreach ($projects as &$proj) {
                 $proj['technologies'] = $techMap[$proj['id']] ?? [];
@@ -114,16 +94,14 @@ class ProjectController {
         ]);
     }
 
-    /** GET /projects/:id */
     public static function show(int $id): never {
         requireAuth();
         $db = Database::getInstance();
 
         $stmt = $db->prepare("
-            SELECT
-                p.*,
-                u1.id   AS owner_id,    u1.name AS owner_name,    u1.email AS owner_email,
-                u2.id   AS sec_owner_id, u2.name AS sec_owner_name, u2.email AS sec_owner_email
+            SELECT p.*,
+                u1.id AS owner_id, u1.name AS owner_name, u1.email AS owner_email,
+                u2.id AS sec_owner_id, u2.name AS sec_owner_name, u2.email AS sec_owner_email
             FROM projects p
             LEFT JOIN users u1 ON u1.id = p.owner_id
             LEFT JOIN users u2 ON u2.id = p.secondary_owner_id
@@ -133,7 +111,6 @@ class ProjectController {
         $project = $stmt->fetch();
         if (!$project) respondNotFound('Proyecto no encontrado');
 
-        // Tecnologías
         $techStmt = $db->prepare("
             SELECT t.id, t.name, t.color
             FROM project_technologies pt
@@ -146,78 +123,64 @@ class ProjectController {
         respondOk($project);
     }
 
-    /** POST /projects — solo admin */
     public static function store(): never {
         requireAdmin();
-        $body = getJsonBody();
-        $data = self::validate($body);
-
-        $db = Database::getInstance();
+        $data = self::validate(getJsonBody());
+        $db   = Database::getInstance();
         $db->beginTransaction();
         try {
             $stmt = $db->prepare("
                 INSERT INTO projects
-                    (name, description, owner_id, secondary_owner_id, git_repo, server, url, status, credentials_location)
-                VALUES (?,?,?,?,?,?,?,?,?)
+                    (name, subtitle, description, owner_id, secondary_owner_id,
+                     status, location, dev_environment, url, credentials_location)
+                VALUES (?,?,?,?,?,?,?,?,?,?)
             ");
             $stmt->execute([
-                $data['name'], $data['description'],
+                $data['name'], $data['subtitle'], $data['description'],
                 $data['owner_id'], $data['secondary_owner_id'],
-                $data['git_repo'], $data['server'], $data['url'],
-                $data['status'], $data['credentials_location'],
+                $data['status'], $data['location'], $data['dev_environment'],
+                $data['url'], $data['credentials_location'],
             ]);
             $id = (int)$db->lastInsertId();
             self::syncTechnologies($db, $id, $data['technology_ids']);
             $db->commit();
         } catch (Throwable $e) {
             $db->rollBack();
-            $msg = APP_DEBUG ? $e->getMessage() : 'Error al crear proyecto';
-            respondError($msg, 500);
+            respondError(APP_DEBUG ? $e->getMessage() : 'Error al crear proyecto', 500);
         }
-
         respondCreated(['id' => $id], 'Proyecto creado');
     }
 
-    /** PUT /projects/:id — solo admin */
     public static function update(int $id): never {
         requireAdmin();
+        $data = self::validate(getJsonBody());
         $db   = Database::getInstance();
-        $body = getJsonBody();
-        $data = self::validate($body);
-
         $db->beginTransaction();
         try {
             $stmt = $db->prepare("
                 UPDATE projects SET
-                    name = ?, description = ?, owner_id = ?, secondary_owner_id = ?,
-                    git_repo = ?, server = ?, url = ?, status = ?, credentials_location = ?
+                    name = ?, subtitle = ?, description = ?,
+                    owner_id = ?, secondary_owner_id = ?,
+                    status = ?, location = ?, dev_environment = ?,
+                    url = ?, credentials_location = ?
                 WHERE id = ?
             ");
             $stmt->execute([
-                $data['name'], $data['description'],
+                $data['name'], $data['subtitle'], $data['description'],
                 $data['owner_id'], $data['secondary_owner_id'],
-                $data['git_repo'], $data['server'], $data['url'],
-                $data['status'], $data['credentials_location'],
+                $data['status'], $data['location'], $data['dev_environment'],
+                $data['url'], $data['credentials_location'],
                 $id,
             ]);
-            if ($stmt->rowCount() === 0) {
-                // Podría ser que no cambió nada; verificamos existencia
-                $check = $db->prepare('SELECT id FROM projects WHERE id = ?');
-                $check->execute([$id]);
-                if (!$check->fetch()) { $db->rollBack(); respondNotFound('Proyecto no encontrado'); }
-            }
             self::syncTechnologies($db, $id, $data['technology_ids']);
             $db->commit();
         } catch (Throwable $e) {
             $db->rollBack();
-            $msg = APP_DEBUG ? $e->getMessage() : 'Error al actualizar proyecto';
-            respondError($msg, 500);
+            respondError(APP_DEBUG ? $e->getMessage() : 'Error al actualizar proyecto', 500);
         }
-
         respondOk(null, 'Proyecto actualizado');
     }
 
-    /** DELETE /projects/:id — solo admin */
     public static function destroy(int $id): never {
         requireAdmin();
         $db   = Database::getInstance();
@@ -227,9 +190,6 @@ class ProjectController {
         respondOk(null, 'Proyecto eliminado');
     }
 
-    // ---- Helpers privados ----
-
-    /** Valida y normaliza el body del proyecto */
     private static function validate(array $body): array {
         $name    = sanitize($body['name'] ?? '');
         $ownerId = isset($body['owner_id']) && is_numeric($body['owner_id']) ? (int)$body['owner_id'] : 0;
@@ -241,14 +201,15 @@ class ProjectController {
 
         return [
             'name'                 => $name,
-            'description'          => sanitize($body['description'] ?? ''),
+            'subtitle'             => sanitize($body['subtitle']             ?? ''),
+            'description'          => sanitize($body['description']          ?? ''),
             'owner_id'             => $ownerId,
             'secondary_owner_id'   => (isset($body['secondary_owner_id']) && is_numeric($body['secondary_owner_id']))
                                        ? (int)$body['secondary_owner_id'] : null,
-            'git_repo'             => sanitize($body['git_repo'] ?? ''),
-            'server'               => sanitize($body['server'] ?? ''),
-            'url'                  => sanitize($body['url'] ?? ''),
             'status'               => $status,
+            'location'             => sanitize($body['location']             ?? ''),
+            'dev_environment'      => sanitize($body['dev_environment']      ?? ''),
+            'url'                  => sanitize($body['url']                  ?? ''),
             'credentials_location' => sanitize($body['credentials_location'] ?? ''),
             'technology_ids'       => array_filter(
                                        array_map('intval', (array)($body['technology_ids'] ?? [])),
@@ -257,7 +218,6 @@ class ProjectController {
         ];
     }
 
-    /** Sincroniza la tabla pivote project_technologies */
     private static function syncTechnologies(PDO $db, int $projectId, array $techIds): void {
         $db->prepare('DELETE FROM project_technologies WHERE project_id = ?')->execute([$projectId]);
         if (!$techIds) return;
