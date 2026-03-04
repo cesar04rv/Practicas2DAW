@@ -1,70 +1,52 @@
 <?php
-// ============================================================
-// backend/index.php  — Front Controller / Router
-// Punto de entrada único para toda la API REST
-// ============================================================
-
-// --- Cabeceras comunes ---
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Responder a preflight CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 require_once __DIR__ . '/middleware/helpers.php';
 require_once __DIR__ . '/middleware/auth.php';
-require_once __DIR__ . '/config/Database.php';
+require_once __DIR__ . '/config/BaseDatos.php';
 
-// ---- Controladores ----
-require_once __DIR__ . '/controllers/AuthController.php';
-require_once __DIR__ . '/controllers/UserController.php';
-require_once __DIR__ . '/controllers/ProjectController.php';
-require_once __DIR__ . '/controllers/TechnologyController.php';
+require_once __DIR__ . '/controllers/ControladorAuth.php';
+require_once __DIR__ . '/controllers/ControladorUsuario.php';
+require_once __DIR__ . '/controllers/ControladorProyecto.php';
+require_once __DIR__ . '/controllers/ControladorTecnologia.php';
 
-// ---- Enrutamiento simple basado en PATH_INFO ----
-$method = $_SERVER['REQUEST_METHOD'];
-// Obtener la ruta después de /backend/index.php
+$metodo = $_SERVER['REQUEST_METHOD'];
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = preg_replace('#^.*?/backend#', '', $uri);
+$uri    = preg_replace('#^.*?/backend#', '', $uri);
 $uri    = rtrim($uri, '/') ?: '/';
 
-// Segmentos: /resource/id/sub
-$parts = explode('/', ltrim($uri, '/'));
-$resource = $parts[0] ?? '';
-$id       = isset($parts[1]) && is_numeric($parts[1]) ? (int)$parts[1] : null;
+$partes   = explode('/', ltrim($uri, '/'));
+$recurso  = $partes[0] ?? '';
+$id       = isset($partes[1]) && is_numeric($partes[1]) ? (int)$partes[1] : null;
 
-// ---- Tabla de rutas ----
 match(true) {
+    $recurso === 'auth' && $partes[1] === 'login'  && $metodo === 'POST' => ControladorAuth::login(),
+    $recurso === 'auth' && $partes[1] === 'logout' && $metodo === 'POST' => ControladorAuth::logout(),
+    $recurso === 'auth' && $partes[1] === 'me'     && $metodo === 'GET'  => ControladorAuth::yo(),
 
-    // Autenticación
-    $resource === 'auth' && $parts[1] === 'login'  && $method === 'POST'   => AuthController::login(),
-    $resource === 'auth' && $parts[1] === 'logout' && $method === 'POST'   => AuthController::logout(),
-    $resource === 'auth' && $parts[1] === 'me'     && $method === 'GET'    => AuthController::me(),
+    $recurso === 'usuarios' && $metodo === 'GET'    && $id === null => ControladorUsuario::listar(),
+    $recurso === 'usuarios' && $metodo === 'GET'    && $id !== null => ControladorUsuario::mostrar($id),
+    $recurso === 'usuarios' && $metodo === 'POST'                   => ControladorUsuario::crear(),
+    $recurso === 'usuarios' && $metodo === 'PUT'    && $id !== null => ControladorUsuario::actualizar($id),
+    $recurso === 'usuarios' && $metodo === 'DELETE' && $id !== null => ControladorUsuario::eliminar($id),
 
-    // Usuarios
-    $resource === 'users' && $method === 'GET'  && $id === null  => UserController::index(),
-    $resource === 'users' && $method === 'GET'  && $id !== null  => UserController::show($id),
-    $resource === 'users' && $method === 'POST'                  => UserController::store(),
-    $resource === 'users' && $method === 'PUT'  && $id !== null  => UserController::update($id),
-    $resource === 'users' && $method === 'DELETE' && $id !== null => UserController::destroy($id),
+    $recurso === 'proyectos' && $metodo === 'GET'    && $id === null => ControladorProyecto::listar(),
+    $recurso === 'proyectos' && $metodo === 'GET'    && $id !== null => ControladorProyecto::mostrar($id),
+    $recurso === 'proyectos' && $metodo === 'POST'                   => ControladorProyecto::crear(),
+    $recurso === 'proyectos' && $metodo === 'PUT'    && $id !== null => ControladorProyecto::actualizar($id),
+    $recurso === 'proyectos' && $metodo === 'DELETE' && $id !== null => ControladorProyecto::eliminar($id),
 
-    // Proyectos
-    $resource === 'projects' && $method === 'GET'  && $id === null  => ProjectController::index(),
-    $resource === 'projects' && $method === 'GET'  && $id !== null  => ProjectController::show($id),
-    $resource === 'projects' && $method === 'POST'                   => ProjectController::store(),
-    $resource === 'projects' && $method === 'PUT'  && $id !== null  => ProjectController::update($id),
-    $resource === 'projects' && $method === 'DELETE' && $id !== null => ProjectController::destroy($id),
+    $recurso === 'tecnologias' && $metodo === 'GET'    && $id === null => ControladorTecnologia::listar(),
+    $recurso === 'tecnologias' && $metodo === 'GET'    && $id !== null => ControladorTecnologia::mostrar($id),
+    $recurso === 'tecnologias' && $metodo === 'POST'                   => ControladorTecnologia::crear(),
+    $recurso === 'tecnologias' && $metodo === 'PUT'    && $id !== null => ControladorTecnologia::actualizar($id),
+    $recurso === 'tecnologias' && $metodo === 'DELETE' && $id !== null => ControladorTecnologia::eliminar($id),
 
-    // Tecnologías
-    $resource === 'technologies' && $method === 'GET'  && $id === null  => TechnologyController::index(),
-    $resource === 'technologies' && $method === 'GET'  && $id !== null  => TechnologyController::show($id),
-    $resource === 'technologies' && $method === 'POST'                   => TechnologyController::store(),
-    $resource === 'technologies' && $method === 'PUT'  && $id !== null  => TechnologyController::update($id),
-    $resource === 'technologies' && $method === 'DELETE' && $id !== null => TechnologyController::destroy($id),
-
-    // Ruta no encontrada
-    default => respondNotFound("Ruta [{$method} /{$resource}] no existe"),
+    default => responderNoEncontrado("Ruta [{$metodo} /{$recurso}] no existe"),
 };

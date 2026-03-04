@@ -1,7 +1,3 @@
-// ============================================================
-// frontend/js/api.js
-// ============================================================
-
 const API_BASE = '/catalogo-apps/backend';
 
 async function apiFetch(endpoint, { method = 'GET', body = null, params = {} } = {}) {
@@ -20,50 +16,46 @@ async function apiFetch(endpoint, { method = 'GET', body = null, params = {} } =
   if (body) opts.body = JSON.stringify(body);
 
   const res  = await fetch(url, opts);
-  const data = await res.json().catch(() => ({ success: false, message: 'Respuesta no válida del servidor' }));
+  const data = await res.json().catch(() => ({ exito: false, mensaje: 'Respuesta no válida del servidor' }));
 
-  // Login: siempre devolver la respuesta, sea éxito o error
-  if (endpoint.includes('/auth/login')) {
-    return data;
-  }
+  if (endpoint.includes('/auth/login')) return data;
 
-  // Otras rutas: redirigir al login si sesión expirada
   if (res.status === 401) {
     App.navigate('login');
     throw new Error('Sesión expirada');
   }
 
-  if (!res.ok && !data.success) {
-    throw new Error(data.message || `Error ${res.status}`);
+  if (!res.ok && !data.exito) {
+    throw new Error(data.mensaje || `Error ${res.status}`);
   }
 
   return data;
 }
 
 const Auth = {
-  login:  (email, password) => apiFetch('/auth/login',  { method: 'POST', body: { email, password } }),
-  logout: ()               => apiFetch('/auth/logout', { method: 'POST' }),
-  me:     ()               => apiFetch('/auth/me'),
+  login:  (correo, contrasena) => apiFetch('/auth/login',  { method: 'POST', body: { correo, contrasena } }),
+  logout: ()                   => apiFetch('/auth/logout', { method: 'POST' }),
+  yo:     ()                   => apiFetch('/auth/me'),
 };
 
-const Projects = {
-  list:   (params = {}) => apiFetch('/projects',        { params }),
-  get:    (id)          => apiFetch(`/projects/${id}`),
-  create: (data)        => apiFetch('/projects',        { method: 'POST',   body: data }),
-  update: (id, data)    => apiFetch(`/projects/${id}`,  { method: 'PUT',    body: data }),
-  remove: (id)          => apiFetch(`/projects/${id}`,  { method: 'DELETE' }),
+const Proyectos = {
+  listar:    (params = {}) => apiFetch('/proyectos',        { params }),
+  obtener:   (id)          => apiFetch(`/proyectos/${id}`),
+  crear:     (datos)       => apiFetch('/proyectos',        { method: 'POST',   body: datos }),
+  actualizar:(id, datos)   => apiFetch(`/proyectos/${id}`,  { method: 'PUT',    body: datos }),
+  eliminar:  (id)          => apiFetch(`/proyectos/${id}`,  { method: 'DELETE' }),
 };
 
-const Technologies = {
-  list:   ()         => apiFetch('/technologies'),
-  create: (data)     => apiFetch('/technologies',        { method: 'POST',   body: data }),
-  update: (id, data) => apiFetch(`/technologies/${id}`,  { method: 'PUT',    body: data }),
-  remove: (id)       => apiFetch(`/technologies/${id}`,  { method: 'DELETE' }),
+const Tecnologias = {
+  listar:    ()            => apiFetch('/tecnologias'),
+  crear:     (datos)       => apiFetch('/tecnologias',       { method: 'POST',   body: datos }),
+  actualizar:(id, datos)   => apiFetch(`/tecnologias/${id}`, { method: 'PUT',    body: datos }),
+  eliminar:  (id)          => apiFetch(`/tecnologias/${id}`, { method: 'DELETE' }),
 };
 
-const Users = {
-  list:   ()         => apiFetch('/users'),
-  create: (data)     => apiFetch('/users',        { method: 'POST',   body: data }),
-  update: (id, data) => apiFetch(`/users/${id}`,  { method: 'PUT',    body: data }),
-  remove: (id)       => apiFetch(`/users/${id}`,  { method: 'DELETE' }),
+const Usuarios = {
+  listar:    ()            => apiFetch('/usuarios'),
+  crear:     (datos)       => apiFetch('/usuarios',          { method: 'POST',   body: datos }),
+  actualizar:(id, datos)   => apiFetch(`/usuarios/${id}`,    { method: 'PUT',    body: datos }),
+  eliminar:  (id)          => apiFetch(`/usuarios/${id}`,    { method: 'DELETE' }),
 };

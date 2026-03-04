@@ -21,11 +21,12 @@
       <span id="nav-user-name" style="color:var(--text-secondary)"></span>
     </a>
     <div class="navbar-actions">
-      <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('technologies')">Tecnologías</button>
-      <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('users')">Usuarios</button>
-      <button class="btn btn-primary btn-sm admin-only" onclick="openProjectModal()">+ Nuevo Proyecto</button>
-      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Salir</button>
-    </div>
+  <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('technologies')">Tecnologías</button>
+  <button class="btn btn-ghost btn-sm admin-only" onclick="App.navigate('users')">Usuarios</button>
+  <button class="btn btn-primary btn-sm admin-only" onclick="openProjectModal()">+ Nuevo Proyecto</button>
+  <button class="btn btn-ghost btn-sm" id="theme-toggle" onclick="toggleTheme()">☀️</button>
+  <button class="btn btn-ghost btn-sm" onclick="doLogout()">Salir</button>
+</div>
   </nav>
 
   <!-- ====== PAGE: LOGIN ====== -->
@@ -74,9 +75,9 @@
         <input type="search" id="filter-search" class="form-control filter-search" placeholder="Buscar por nombre o descripción…">
         <select id="filter-status" class="form-control">
           <option value="">Todos los estados</option>
-          <option value="production">Producción</option>
-          <option value="dev">Desarrollo</option>
-          <option value="stopped">Parado</option>
+          <option value="produccion">Producción</option>
+          <option value="desarrollo">Desarrollo</option>
+          <option value="parado">Parado</option>
         </select>
         <select id="filter-owner" class="form-control"><option>Cargando…</option></select>
         <select id="filter-tech" class="form-control"><option>Cargando…</option></select>
@@ -173,9 +174,9 @@
         <div class="form-group">
           <label>Estado</label>
           <select class="form-control" id="pf-status">
-            <option value="dev">Desarrollo</option>
-            <option value="production">Producción</option>
-            <option value="stopped">Parado</option>
+            <option value="desarrollo">Desarrollo</option>
+            <option value="produccion">Producción</option>
+            <option value="parado">Parado</option>
           </select>
         </div>
         <div class="form-group">
@@ -261,7 +262,7 @@
       <div class="form-group">
         <label>Rol</label>
         <select class="form-control" id="user-form-role">
-          <option value="viewer">Viewer</option>
+          <option value="visor">Viewer</option>
           <option value="admin">Admin</option>
         </select>
       </div>

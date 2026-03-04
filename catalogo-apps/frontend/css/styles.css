@@ -38,6 +38,30 @@
 
   --transition: 150ms ease;
 }
+/* ---- Tema claro ---- */
+[data-theme="light"] {
+  --bg-base:     #f0f2f7;
+  --bg-surface:  #ffffff;
+  --bg-raised:   #e8ebf2;
+  --bg-hover:    #dde1ed;
+  --border:      #c8cedd;
+  --border-dim:  #d8dce8;
+
+  --text-primary:   #0f1117;
+  --text-secondary: #4a5470;
+  --text-muted:     #8892aa;
+
+  --accent:     #2563eb;
+  --accent-dim: #dbeafe;
+  --green:      #16a34a;
+  --amber:      #d97706;
+  --red:        #dc2626;
+  --purple:     #7c3aed;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.1);
+  --shadow:    0 4px 16px rgba(0,0,0,.12);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.15);
+}
 
 /* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -273,9 +297,9 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   white-space: nowrap;
   font-family: var(--font-mono);
 }
-.badge-status-production { background: rgba(62,207,142,.12); color: var(--green); border: 1px solid rgba(62,207,142,.2); }
-.badge-status-dev        { background: rgba(245,166,35,.12);  color: var(--amber); border: 1px solid rgba(245,166,35,.2); }
-.badge-status-stopped    { background: rgba(242,95,92,.12);   color: var(--red);   border: 1px solid rgba(242,95,92,.2); }
+.badge-status-produccion  { background: rgba(62,207,142,.12); color: var(--green); border: 1px solid rgba(62,207,142,.2); }
+.badge-status-desarrollo  { background: rgba(245,166,35,.12);  color: var(--amber); border: 1px solid rgba(245,166,35,.2); }
+.badge-status-parado      { background: rgba(242,95,92,.12);   color: var(--red);   border: 1px solid rgba(242,95,92,.2); }
 .badge-tech {
   font-size: 11px;
   padding: 2px 7px;

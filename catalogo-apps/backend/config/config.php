@@ -1,27 +1,17 @@
 <?php
-// ============================================================
-// backend/config/config.php
-// Configuración central de la aplicación
-// ============================================================
+define('BD_HOST',    'localhost');
+define('BD_PUERTO',  '3306');
+define('BD_NOMBRE',  'catalogo_apps');
+define('BD_USUARIO', 'root');
+define('BD_PASS',    '');
+define('BD_CHARSET', 'utf8mb4');
 
-// --- Base de datos ---
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');
-define('DB_NAME', 'catalogo_apps');
-define('DB_USER', 'root');          // ← cambiar en producción
-define('DB_PASS', '');              // ← cambiar en producción
-define('DB_CHARSET', 'utf8mb4');
+define('SESION_DURACION', 7200);
+define('SESION_NOMBRE',   'CATALOGO_SESION');
 
-// --- Sesión ---
-define('SESSION_LIFETIME', 7200);   // 2 horas en segundos
-define('SESSION_NAME', 'CATALOGO_SESSION');
+define('TAMANO_PAGINA', 20);
 
-// --- Paginación ---
-define('PAGE_SIZE', 20);
+define('APP_ENTORNO', 'desarrollo');
+define('APP_DEBUG',   APP_ENTORNO === 'desarrollo');
 
-// --- Entorno ---
-define('APP_ENV', 'development');   // 'production' | 'development'
-define('APP_DEBUG', APP_ENV === 'development');
-
-// --- CORS (ajustar según dominio real en producción) ---
-define('ALLOWED_ORIGIN', '*');
+define('ORIGEN_PERMITIDO', '*');

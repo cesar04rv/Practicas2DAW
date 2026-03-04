@@ -1,19 +1,14 @@
 <?php
-// ============================================================
-// backend/middleware/auth.php
-// Gestión de sesiones y comprobación de roles
-// ============================================================
-
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/../config/config.php';
 
-function startSecureSession(): void {
+function iniciarSesionSegura(): void {
     if (session_status() === PHP_SESSION_NONE) {
-        session_name(SESSION_NAME);
+        session_name(SESION_NOMBRE);
         session_set_cookie_params([
-            'lifetime' => SESSION_LIFETIME,
+            'lifetime' => SESION_DURACION,
             'path'     => '/',
-            'secure'   => false,    // ← true en producción con HTTPS
+            'secure'   => false,
             'httponly' => true,
             'samesite' => 'Strict',
         ]);
@@ -21,39 +16,35 @@ function startSecureSession(): void {
     }
 }
 
-/** Requiere que el usuario esté autenticado. Devuelve los datos de sesión. */
-function requireAuth(): array {
-    startSecureSession();
-    if (empty($_SESSION['user'])) {
-        respondUnauthorized('Sesión no iniciada o expirada');
+function requerirAuth(): array {
+    iniciarSesionSegura();
+    if (empty($_SESSION['usuario'])) {
+        responderNoAutorizado('Sesión no iniciada o expirada');
     }
-    return $_SESSION['user'];
+    return $_SESSION['usuario'];
 }
 
-/** Requiere rol admin; aborta con 403 si no lo tiene. */
-function requireAdmin(): array {
-    $user = requireAuth();
-    if ($user['role'] !== 'admin') {
-        respondForbidden('Acción reservada para administradores');
+function requerirAdmin(): array {
+    $usuario = requerirAuth();
+    if ($usuario['rol'] !== 'admin') {
+        responderProhibido('Acción reservada para administradores');
     }
-    return $user;
+    return $usuario;
 }
 
-/** Inicia sesión almacenando los datos del usuario. */
-function loginUser(array $user): void {
-    startSecureSession();
-    session_regenerate_id(true);  // previene session fixation
-    $_SESSION['user'] = [
-        'id'    => $user['id'],
-        'name'  => $user['name'],
-        'email' => $user['email'],
-        'role'  => $user['role'],
+function iniciarSesionUsuario(array $usuario): void {
+    iniciarSesionSegura();
+    session_regenerate_id(true);
+    $_SESSION['usuario'] = [
+        'id'     => $usuario['id'],
+        'nombre' => $usuario['nombre'],
+        'correo' => $usuario['correo'],
+        'rol'    => $usuario['rol'],
     ];
 }
 
-/** Destruye la sesión. */
-function logoutUser(): void {
-    startSecureSession();
+function cerrarSesion(): void {
+    iniciarSesionSegura();
     $_SESSION = [];
     session_destroy();
 }
